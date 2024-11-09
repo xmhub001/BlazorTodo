@@ -1,0 +1,56 @@
+﻿@page "/todo"
+@rendermode InteractiveServer
+
+<PageTitle>Blazor Todo List</PageTitle>
+
+<h3>Todo</h3>
+
+<ul>
+    @foreach (var todo in todos)
+    {
+        <!--<li>@todo.Title</li>-->
+        <li>
+            <label @bind="todo.Id" />
+            <input type="checkbox" @onclick="() => RemoveTodo(todo.Id)" @bind="todo.IsDone" />
+            <input @bind="todo.Title" />
+            <input type="text" @bind="todo.StartDate" />
+        </li>
+    }
+</ul>
+
+<input placeholder="Something todo" @bind="newTodo" />
+<button name="btnAdd" @onclick="AddTodo">Add todo item</button>
+
+@code {
+    private static List<TodoItem> todos = new();
+    private int NewId = 0;
+    private string? newTodo;
+
+    private void AddTodo()
+    {
+        //Todo: Add the todo
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            todos.Add(new TodoItem { 
+                Id = NewId,
+                Title = newTodo,
+                IsDone = false,
+                StartDate = DateTime.Now
+            });
+            NewId += 1;
+            newTodo = string.Empty;
+        }
+    }
+    private void RemoveTodo(int Id)
+    {
+        //for(int x = 0; x < todos.Count; x++)
+        foreach(var x in todos)
+        {
+            if (x.Id == Id)
+            {
+                todos.Remove(x);
+                break;
+            }
+        }
+    }
+}
